@@ -10,7 +10,7 @@ int main(){
         Url url{ "https://www.wikipedia.org/what-me-worry?hello=there#wonder" };
 
     }
-    
+
     return 0;
 
 }

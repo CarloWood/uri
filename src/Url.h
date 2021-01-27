@@ -2,7 +2,7 @@
 // MIT License
 // https://github.com/homer6/url
 
-// This class takes inspiration and some source code from 
+// This class takes inspiration and some source code from
 // https://github.com/chriskohlhoff/urdl/blob/master/include/urdl/url.hpp
 
 #pragma once
@@ -19,7 +19,7 @@ using std::multimap;
 
 namespace homer6{
 
-    /* 
+    /*
         Url and UrlView are compliant with
             https://tools.ietf.org/html/rfc3986
             https://tools.ietf.org/html/rfc6874
@@ -67,9 +67,9 @@ namespace homer6{
 
             static bool unescape_path(const std::string& in, std::string& out);
 
-            string_view captureUpTo( const string_view right_delimiter, const string& error_message = "" );            
+            string_view captureUpTo( const string_view right_delimiter, const string& error_message = "" );
             bool moveBefore( const string_view right_delimiter );
-            bool existsForward( const string_view right_delimiter );       
+            bool existsForward( const string_view right_delimiter );
 
             string scheme;
             string authority;

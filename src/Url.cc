@@ -57,7 +57,7 @@ namespace homer6{
         }
 
         if( this->scheme == "https" ) return 443;
-        if( this->scheme == "http" ) return 80;     
+        if( this->scheme == "http" ) return 80;
         if( this->scheme == "ssh" ) return 22;
         if( this->scheme == "ftp" ) return 21;
         if( this->scheme == "mysql" ) return 3306;
@@ -180,10 +180,10 @@ namespace homer6{
         this->authority_present = false;
 
 
-        // scheme                   
+        // scheme
             this->scheme = this->captureUpTo( ":", "Expected : in Url" );
-            std::transform( 
-                this->scheme.begin(), this->scheme.end(), 
+            std::transform(
+                this->scheme.begin(), this->scheme.end(),
                 this->scheme.begin(), []( string_view::value_type c){ return std::tolower(c); }
             );
             this->left_position += scheme.size() + 1;
@@ -225,7 +225,7 @@ namespace homer6{
                 }else{
 
                     //no query
-                    if( this->existsForward("#") ){                        
+                    if( this->existsForward("#") ){
                         this->path = this->captureUpTo( "#" );
                         this->moveBefore("#");
                         this->left_position++;
@@ -233,9 +233,9 @@ namespace homer6{
                     }else{
                         //no fragment
                         if( path_exists ){
-                            this->path = this->captureUpTo( "#" );    
+                            this->path = this->captureUpTo( "#" );
                         }
-                        
+
                     }
 
                 }
@@ -351,9 +351,9 @@ namespace homer6{
                     if( i + 3 <= in.size() ){
 
                         unsigned int value = 0;
-                
+
                         for( std::size_t j = i + 1; j < i + 3; ++j ){
-                
+
                             switch( in[j] ){
 
                                 case '0': case '1': case '2': case '3': case '4':
@@ -368,11 +368,11 @@ namespace homer6{
                                 case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
                                     value += in[j] - 'A' + 10;
                                     break;
-                                
+
                                 default:
                                     return false;
                             }
-                        
+
                             if( j == i + 1 ) value <<= 4;
 
                         }
@@ -386,7 +386,7 @@ namespace homer6{
                         return false;
 
                     }
-                    
+
                     break;
 
 
