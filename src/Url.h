@@ -7,93 +7,78 @@
 
 #pragma once
 
-#include <string>
-using std::string;
-
-#include <string_view>
-using std::string_view;
-
 #include <map>
-using std::multimap;
+#include <string>
+#include <string_view>
 
+namespace homer6 {
 
-namespace homer6{
+//  Url and UrlView are compliant with
+//      https://tools.ietf.org/html/rfc3986
+//      https://tools.ietf.org/html/rfc6874
+//      https://tools.ietf.org/html/rfc7320
+//      and adheres to https://rosettacode.org/wiki/URL_parser examples.
+//
+//  Url will use default ports for known schemes, if the port is not explicitly provided.
+//
 
-    /*
-        Url and UrlView are compliant with
-            https://tools.ietf.org/html/rfc3986
-            https://tools.ietf.org/html/rfc6874
-            https://tools.ietf.org/html/rfc7320
-            and adheres to https://rosettacode.org/wiki/URL_parser examples.
+class Url
+{
+ public:
+  Url();
+  Url(std::string const& s);
 
-        Url will use default ports for known schemes, if the port is not explicitly provided.
-    */
+  std::string getScheme() const { return m_scheme; }
+  std::string getUsername() const { return m_username; }
+  std::string getPassword() const { return m_password; }
+  std::string getHost() const { return m_host; }
+  std::string getQuery() const { return m_query; }
+  std::multimap<std::string, std::string> const& getQueryParameters() const { return m_query_parameters; }
+  std::string getFragment() const { return m_fragment; }
+  bool isIpv6() const { return m_ipv6_host; }
+  bool isSecure() const { return m_secure; }
 
+  void setSecure(bool secure) { m_secure = secure; }
 
-    class Url{
+  unsigned short getPort() const;
+  std::string getPath() const;
 
-        public:
+  void fromString(std::string const& s);
 
-            Url();
-            Url( const std::string& s );
+  friend bool operator==(Url const& a, Url const& b);
+  friend bool operator!=(Url const& a, Url const& b);
+  friend bool operator<(Url const& a, Url const& b);
 
-            string getScheme() const;
-            string getUsername() const;
-            string getPassword() const;
-            string getHost() const;
-            unsigned short getPort() const;
-            string getPath() const;
-            string getQuery() const;
-            const multimap<string,string>& getQueryParameters() const;
-            string getFragment() const;
+  std::string toString() const;
+  explicit operator std::string() const;
 
+ protected:
+  static bool unescape_path(std::string const& in, std::string& out);
 
-            void fromString( const std::string& s );
+  std::string_view captureUpTo(std::string_view const right_delimiter, std::string const& error_message = "");
+  bool moveBefore(std::string_view const right_delimiter);
+  bool existsForward(std::string_view const right_delimiter);
 
-            friend bool operator==(const Url& a, const Url& b);
-            friend bool operator!=(const Url& a, const Url& b);
-            friend bool operator<(const Url& a, const Url& b);
+  std::string m_scheme;
+  std::string m_authority;
+  std::string m_user_info;
+  std::string m_username;
+  std::string m_password;
+  std::string m_host;
+  std::string m_port;
+  std::string m_path;
+  std::string m_query;
+  std::multimap<std::string, std::string> m_query_parameters;
+  std::string m_fragment;
 
-            void setSecure( bool secure );
+  bool m_secure            = false;
+  bool m_ipv6_host         = false;
+  bool m_authority_present = false;
 
-            bool isIpv6() const;
-            bool isSecure() const;
+  std::string m_whole_url_storage;
+  size_t m_left_position  = 0;
+  size_t m_right_position = 0;
+  std::string_view m_parse_target;
+};
 
-            string toString() const;
-            explicit operator string() const;
-
-
-        protected:
-
-            static bool unescape_path(const std::string& in, std::string& out);
-
-            string_view captureUpTo( const string_view right_delimiter, const string& error_message = "" );
-            bool moveBefore( const string_view right_delimiter );
-            bool existsForward( const string_view right_delimiter );
-
-            string scheme;
-            string authority;
-            string user_info;
-            string username;
-            string password;
-            string host;
-            string port;
-            string path;
-            string query;
-            multimap<string,string> query_parameters;
-            string fragment;
-
-            bool secure = false;
-            bool ipv6_host = false;
-            bool authority_present = false;
-
-            string whole_url_storage;
-            size_t left_position = 0;
-            size_t right_position = 0;
-            string_view parse_target;
-
-    };
-
-
-
-}
+}  // namespace homer6
